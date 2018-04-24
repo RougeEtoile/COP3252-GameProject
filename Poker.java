@@ -14,9 +14,13 @@ public class Poker
         while( input != 'x')
         {
             texas.play();
+            System.out.println("Enter x to quit or any other key for a new game");
             input = in.next().charAt(0);
-            System.out.println("Press x to quit");
+            if(input == 'x')
+                break;
+            texas = new Game();
         }
+        System.exit(1);
     }
 }
 class Game
@@ -55,6 +59,12 @@ class Game
             setAllRespondedFalse();
             river();
             score();
+            reset();
+            System.out.println("Enter x to quit or any other key to play another hand");
+            char input = in.next().charAt(0);
+            if(input == 'x')
+                break;
+
         }
     }
     private void preFlop()
@@ -68,16 +78,22 @@ class Game
             players[i].addCards(deck.deal());
         }
         System.out.println("Player 1");
-        int current = action(players[button], rules.getSmallBet());
-        //System.out.println("in preflop after current");
-        int i =0;
-        System.out.println("Player 2");
-        while(!hasAllResponded())
-        {
-            //System.out.println("button + i % 2 is" + ((button + i) %2));
-            if(!players[(button + i) % 2].isResponded())
-                current = action(players[i],current);
-            i++;
+        if(bettingEnabled()) {
+            int current = action(players[button], rules.getSmallBet());
+            //System.out.println("hasAllresponded is " + hasAllResponded());
+            System.out.println("Player 2");
+            while (hasAllResponded() == false) {
+                if(!bettingEnabled())
+                    break;
+                for(Player p: players)
+                {
+                    if(!bettingEnabled())
+                        break;
+                    if(!p.isResponded())
+                        current= action(p, current);
+                }
+                //System.out.println("hasAllresponded is " + hasAllResponded());
+            }
         }
     }
     private void flop()
@@ -87,19 +103,8 @@ class Game
         board.add(deck.deal());
         board.add(deck.deal());
         board.add(deck.deal());
-        System.out.println(board.elementAt(0).toString());
-        System.out.println(board.elementAt(1).toString());
-        System.out.println(board.elementAt(2).toString());
-        int current = action(players[button+1], rules.getSmallBet());
-        int i =0;
-        System.out.println("hasAllresponded is " + hasAllResponded());
-        while(hasAllResponded() == false)
-        {
-            if(!players[(button + i) %2].isResponded())
-                current = action(players[i],current);
-            i++;
-            //System.out.println("hasAllresponded is " + hasAllResponded());
-        }
+        printBoard();
+        betting();
 
     }
     private void turn()
@@ -107,44 +112,23 @@ class Game
         System.out.println("\nThis is the turn\n");
         setAllRespondedFalse();
         board.add(deck.deal());
-        for (Card x: board)
-        {
-            System.out.println(x.toString());
-        }
-        int current = action(players[button+1], rules.getSmallBet());
-        int i =0;
-        while(!hasAllResponded())
-        {
-            if(!players[(button + i) %2].isResponded())
-                current = action(players[i],current);
-            i++;
-        }
-
+        printBoard();
+        betting();
     }
     private void river()
     {
         System.out.println("\nThis is the river\n");
         setAllRespondedFalse();
         board.add(deck.deal());
-        for (Card x: board)
-        {
-            System.out.println(x.toString());
-        }
-        int current = action(players[button+1], rules.getSmallBet());
-        int i =0;
-        while(!hasAllResponded())
-        {
-            if(!players[(button + i) %2].isResponded())
-                current = action(players[i],current);
-        }
-        i++;
+        printBoard();
+        betting();
     }
     private void score()
     {
-        System.out.println("This is scoring");
+        System.out.println("\nThis is scoring");
         Card [] p1hand = {players[0].cards.elementAt(0), players[0].cards.elementAt(1), board.elementAt(0), board.elementAt(1), board.elementAt(2)};
         Card [] p2hand = {players[1].cards.elementAt(0), players[1].cards.elementAt(1), board.elementAt(0), board.elementAt(1), board.elementAt(2)};
-        System.out.println("Entering scoring functions");
+        //System.out.println("Entering scoring functions");
         int p1score = rules.score(p1hand);
         int p2score = rules.score(p2hand);
         if(p1score > p2score)
@@ -153,7 +137,7 @@ class Game
             players[0].addWinnings(pot);
 
         }
-        if(p2score > p1score)
+        else if(p2score > p1score)
         {
             System.out.println("Player 2 has won the hand");
             players[1].addWinnings(pot);
@@ -185,6 +169,7 @@ class Game
             p.setStatusIN();
             p.removeCards();
         }
+        board.clear();
         button++;
         button = players.length %2;
     }
@@ -201,11 +186,12 @@ class Game
     }
     private int action(Player currentPlayer, int bet)
     {
-        actionMenu(bet);
-        System.out.println("You have $"+ currentPlayer.getCash());
+
         if( !currentPlayer.getStatus().equals("FOLD") || !currentPlayer.getStatus().equals("ALLIN"))
         {
 
+            actionMenu(bet);
+            System.out.println("You have $"+ currentPlayer.getCash());
             char x = in.next().charAt(0);
             boolean valid = false;
             while(!valid)
@@ -214,6 +200,8 @@ class Game
                 {
                     case 'c':   //check
                         valid = currentPlayer.gamble(bet);
+                        if(valid == false)
+                            System.out.println("You can not bet by that amount");
                         pot += bet;
                         break;
                     case 'f':
@@ -239,7 +227,6 @@ class Game
                         bet = currentPlayer.getCash();
                         currentPlayer.gamble(bet);
                         pot += bet;
-                        bet = currentPlayer.getCash();
                         valid = currentPlayer.allIn();
                         setAllRespondedFalse();
                         break;
@@ -261,7 +248,7 @@ class Game
         System.out.println("f to fold");
         System.out.println("r to raise");
         System.out.println("a to all in");
-        System.out.println("Current bet is " + bet);
+        System.out.println("Current bet is $" + bet);
     }
     private void setAllRespondedFalse()
     {
@@ -278,6 +265,41 @@ class Game
                 return false;
         }
         return true;
+    }
+    private boolean bettingEnabled()
+    {
+        for(Player p: players)
+        {
+            if(p.getStatus().equals("FOLD") || p.getStatus().equals("ALLIN"))
+                return false;
+        }
+        return true;
+    }
+    private void betting()
+    {
+        if(bettingEnabled()) {
+            int current = action(players[button + 1], rules.getSmallBet());
+            //System.out.println("hasAllresponded is " + hasAllResponded());
+            while (hasAllResponded() == false) {
+                if(!bettingEnabled())
+                    break;
+                for(Player p: players)
+                {
+                    if(!bettingEnabled())
+                        break;
+                    if(!p.isResponded())
+                        current= action(p, current);
+                }
+                //System.out.println("hasAllresponded is " + hasAllResponded());
+            }
+        }
+    }
+    private void printBoard()
+    {
+        for (Card x: board)
+        {
+            System.out.println(x.toString());
+        }
     }
 
 }
@@ -448,7 +470,7 @@ class Rulebook
     }
     public static int score(Card [] hand)
     {
-        System.out.println("In rules.score()");
+        //System.out.println("In rules.score()");
         if ( isFlush(hand) && isStraight(hand) )
             return valueStraightFlush(hand);
         else if ( is4s(hand) )
