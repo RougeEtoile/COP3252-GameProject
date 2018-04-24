@@ -138,13 +138,24 @@ class Game
         //System.out.println("Entering scoring functions");
         int p1score = rules.score(p1hand);
         int p2score = rules.score(p2hand);
-        if(p1score > p2score || players[1].getStatus().equals("FOLD"))
+
+        if(players[1].getStatus().equals("FOLD"))   //player 2 folded
+        {
+            System.out.println(players[0].getName() +" has won the hand");
+            players[0].addWinnings(pot)
+        }
+        else if(p1score > p2score)                   //player 1 had a better hard
         {
             System.out.println(players[0].getName() +" has won the hand");
             players[0].addWinnings(pot);
 
         }
-        else if(p2score > p1score || players[0].getStatus().equals("FOLD"))
+        else if( players[0].getStatus().equals("FOLD"))
+        {
+            System.out.println(players[1].getName() +" has won the hand");
+            players[1].addWinnings(pot);
+        }
+        else if(p2score > p1score ||)
         {
             System.out.println(players[1].getName() +" has won the hand");
             players[1].addWinnings(pot);
