@@ -9,7 +9,12 @@ public class Poker
     {
         Scanner in = new Scanner(System.in);
         System.out.println("No Limit Texas Holdem Poker");
-        Game texas = new Game();
+        System.out.print("Enter the name of player one: ");
+        String one = in.next();
+        System.out.print("Enter the name of player two: ");
+        String two = in.next();
+
+        Game texas = new Game(one, two);
         char input = 's';
         while( input != 'x')
         {
@@ -18,7 +23,12 @@ public class Poker
             input = in.next().charAt(0);
             if(input == 'x')
                 break;
-            texas = new Game();
+            System.out.print("Enter the name of player one: ");
+            one = in.next();
+            System.out.print("Enter the name of player two: ");
+            two = in.next();
+
+            texas = new Game(one, two);
         }
         System.exit(1);
     }
@@ -32,15 +42,12 @@ class Game
     private int pot = 0;
     private int currentPot = 0;
     private int button = 0;     // which player has the button
-    private boolean player1 = true;
     Scanner in = new Scanner(System.in);
 
-    public Game()
+    public Game(String one, String two)
     {
-        for(int i = 0; i< players.length; i++)
-        {
-            players[i] = new Player();
-        }
+        players[0] = new Player(one);
+        players[1] = new Player(two);
     }
     public Game(int members)
     {
@@ -77,11 +84,11 @@ class Game
             players[i].addCards(deck.deal());
             players[i].addCards(deck.deal());
         }
-        System.out.println("Player 1");
+        //System.out.println("Player 1");
         if(bettingEnabled()) {
             int current = action(players[button], rules.getSmallBet());
             //System.out.println("hasAllresponded is " + hasAllResponded());
-            System.out.println("Player 2");
+            //System.out.println("Player 2");
             while (hasAllResponded() == false) {
                 if(!bettingEnabled())
                     break;
@@ -131,15 +138,15 @@ class Game
         //System.out.println("Entering scoring functions");
         int p1score = rules.score(p1hand);
         int p2score = rules.score(p2hand);
-        if(p1score > p2score)
+        if(p1score > p2score || players[1].getStatus().equals("FOLD"))
         {
-            System.out.println("Player 1 has won the hand");
+            System.out.println(players[0].getName() +" has won the hand");
             players[0].addWinnings(pot);
 
         }
-        else if(p2score > p1score)
+        else if(p2score > p1score || players[0].getStatus().equals("FOLD"))
         {
-            System.out.println("Player 2 has won the hand");
+            System.out.println(players[1].getName() +" has won the hand");
             players[1].addWinnings(pot);
         }
         else
@@ -189,7 +196,7 @@ class Game
 
         if( !currentPlayer.getStatus().equals("FOLD") || !currentPlayer.getStatus().equals("ALLIN"))
         {
-
+            System.out.println("\n" +currentPlayer.getName() + " choose your action");
             actionMenu(bet);
             System.out.println("You have $"+ currentPlayer.getCash());
             char x = in.next().charAt(0);
@@ -664,17 +671,19 @@ class Rulebook
 }
 class Player
 {
+    private String name;
     private int cash;
     public Vector<Card> cards = new Vector<Card>();
     private String status ="";
     private int handTotal = 0;
     private boolean responded;
 
-    public Player()
+    public Player( String x)
     {
         cash = 40;
         status = "IN";
         responded = false;
+        name = x;
     }
     public Player(int bank)
     {
@@ -767,4 +776,8 @@ class Player
         cards.clear();
     }
 
+    public String getName()
+    {
+        return name;
+    }
 }
