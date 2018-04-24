@@ -28,6 +28,7 @@ class Game
     private int pot = 0;
     private int currentPot = 0;
     private int button = 0;     // which player has the button
+    private boolean player1 = true;
     Scanner in = new Scanner(System.in);
 
     public Game()
@@ -66,9 +67,11 @@ class Game
             players[i].addCards(deck.deal());
             players[i].addCards(deck.deal());
         }
+        System.out.println("Player 1");
         int current = action(players[button], rules.getSmallBet());
         //System.out.println("in preflop after current");
-        int i =1;
+        int i =0;
+        System.out.println("Player 2");
         while(!hasAllResponded())
         {
             //System.out.println("button + i % 2 is" + ((button + i) %2));
@@ -95,7 +98,7 @@ class Game
             if(!players[(button + i) %2].isResponded())
                 current = action(players[i],current);
             i++;
-            System.out.println("hasAllresponded is " + hasAllResponded());
+            //System.out.println("hasAllresponded is " + hasAllResponded());
         }
 
     }
@@ -120,7 +123,7 @@ class Game
     }
     private void river()
     {
-        System.out.println("This is the river");
+        System.out.println("\nThis is the river\n");
         setAllRespondedFalse();
         board.add(deck.deal());
         for (Card x: board)
@@ -607,7 +610,7 @@ class Rulebook
 
     private static void sortRank( Card [] hand)
     {
-        System.out.println("In rules.sortRank()");
+        //System.out.println("In rules.sortRank()");
         int i, j;
         int minJ = 0;
 
@@ -621,16 +624,16 @@ class Rulebook
                     minJ = j;
                 }
             }
+            Card help = hand[i];
+            hand[i] = hand[minJ];
+            hand[minJ] = help;
         }
-        Card help = hand[i];
-        hand[i] = hand[minJ];
-        hand[minJ] = help;
+
     }
     private static void sortSuit( Card [] hand)
     {
-        System.out.println("In rules.sortSuit()");
-        int i, j;
-        int minJ = 0;
+        //System.out.println("In rules.sortSuit()");
+        int i, j, minJ;
         for(i =0; i<hand.length; i++)
         {
             minJ = i;
@@ -641,10 +644,11 @@ class Rulebook
                     minJ = j;
                 }
             }
+            Card help = hand[i];
+            hand[i] = hand[minJ];
+            hand[minJ] = help;
         }
-        Card help = hand[i];
-        hand[i] = hand[minJ];
-        hand[minJ] = help;
+
     }
     public static int valueHighCard( Card[] hand )
     {
