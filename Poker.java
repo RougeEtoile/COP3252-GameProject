@@ -303,25 +303,6 @@ class Game
     }
 
 }
-class Pot
-{
-    private Vector<Player> players;
-    private int total;
-    public Pot( Vector<Player> attached)
-    {
-        players = new Vector<Player>(attached);
-        total = 0;
-    }
-    public void add( int bet )
-    {
-        total += bet;
-    }
-    public Vector<Player> getPlayers()
-    {
-        return players;
-    }
-
-}
 class Card
 {
     private int suit;
