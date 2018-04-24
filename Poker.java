@@ -142,7 +142,7 @@ class Game
         if(players[1].getStatus().equals("FOLD"))   //player 2 folded
         {
             System.out.println(players[0].getName() +" has won the hand");
-            players[0].addWinnings(pot)
+            players[0].addWinnings(pot);
         }
         else if(p1score > p2score)                   //player 1 had a better hard
         {
@@ -155,7 +155,7 @@ class Game
             System.out.println(players[1].getName() +" has won the hand");
             players[1].addWinnings(pot);
         }
-        else if(p2score > p1score ||)
+        else if(p2score > p1score)
         {
             System.out.println(players[1].getName() +" has won the hand");
             players[1].addWinnings(pot);
