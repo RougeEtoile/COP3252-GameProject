@@ -50,6 +50,7 @@ public class Player
             return false;
         else
         {
+            System.out.println("gambled");
             cash -= amount;
             if(cash == 0)
                 status = "ALLIN";
@@ -102,7 +103,6 @@ public class Player
     {
         cards.clear();
     }
-
     public String getName()
     {
         return name;
@@ -111,4 +111,5 @@ public class Player
     {
         name = x;
     }
+    public void setCash(int amount){cash = amount;}
 }

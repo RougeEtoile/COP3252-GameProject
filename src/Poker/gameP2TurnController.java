@@ -224,6 +224,7 @@ public class gameP2TurnController implements Initializable{
     @FXML
     void restart(ActionEvent event) throws Exception
     {
+        Context.getInstance().resetGame();
         Parent root = FXMLLoader.load(getClass().getResource("welcome.fxml"));
         Scene rootScene = new Scene(root);
         Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();

@@ -13,4 +13,5 @@ public class Context
     public Game currentGame() {
         return game;
     }
+    public Game resetGame() { game = new Game(); return game;}
 }

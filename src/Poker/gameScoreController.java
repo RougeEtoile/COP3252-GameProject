@@ -81,13 +81,30 @@ public class gameScoreController implements Initializable{
     }
 
     @FXML
-    void newHand(ActionEvent event) {
+    void newHand(ActionEvent event) throws IOException
+    {
+        if(Context.getInstance().currentGame().isDone())
+        {
+            System.out.println("Broke");
+            errorMSG.setText("A player doesn't have the money to continue, press restart for a new game.");
+        }
+        else
+        {
+            System.out.println("New hand");
+            Context.getInstance().currentGame().reset();
+            Parent gameParent = FXMLLoader.load(getClass().getResource("gameP1Preflop.fxml"));
+            Scene gameScene = new Scene(gameParent);
+            Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
+            window.setScene(gameScene);
+            window.show();
 
+        }
     }
 
     @FXML
     void restart(ActionEvent event) throws IOException
     {
+        Context.getInstance().resetGame();
         Parent root = FXMLLoader.load(getClass().getResource("welcome.fxml"));
         Scene rootScene = new Scene(root);
         Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
