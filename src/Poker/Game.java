@@ -145,4 +145,88 @@ public class Game
         players[1].setName(x);
     }
 
+    public boolean isPreFlop()
+    {
+        return preFlop;
+    }
+
+    public boolean isFlop()
+    {
+        return flop;
+    }
+
+    public boolean isTurn()
+    {
+        return turn;
+    }
+
+    public boolean isRiver()
+    {
+        return river;
+    }
+
+    public DeckofCards getDeck()
+    {
+        return deck;
+    }
+
+    public Vector<Card> getBoard()
+    {
+        return board;
+    }
+
+    public Player[] getPlayers()
+    {
+        return players;
+    }
+
+    public Rulebook getRules()
+    {
+        return rules;
+    }
+
+    public int getPot()
+    {
+        return pot;
+    }
+
+    public int getButton()
+    {
+        return button;
+    }
+    public int getCurrentBet()
+    {
+        return currentBet;
+    }
+
+    public void setDeck(DeckofCards d)
+    {
+        deck = d;
+    }
+
+    public void setBoard(Vector<Card> b)
+    {
+        board = b;
+    }
+
+    public void setRules(Rulebook r)
+    {
+        rules = r;
+    }
+
+    public void setPot(int p)
+    {
+        pot = p;
+    }
+
+    public void setButton(int b)
+    {
+        button = b;
+    }
+
+    public void setCurrentBet(int c)
+    {
+        currentBet = c;
+    }
+
 }
