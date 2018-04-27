@@ -233,6 +233,7 @@ public class gameP1PreflopController implements Initializable{
 
     @FXML
     void restart(ActionEvent event) throws Exception {
+        Context.getInstance().resetGame();
         Parent root = FXMLLoader.load(getClass().getResource("welcome.fxml"));
         Scene rootScene = new Scene(root);
         Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
@@ -274,12 +275,12 @@ public class gameP1PreflopController implements Initializable{
         String playerNameHelp ="Current player is ";
         String currentPlayer = Context.getInstance().currentGame().players[button%2].getName();
         String player1Name = Context.getInstance().currentGame().players[button%2].getName();
-        String player2Name = Context.getInstance().currentGame().players[button+1%2].getName();
+        String player2Name = Context.getInstance().currentGame().players[(button+1)%2].getName();
         String plCashHelp = player1Name.concat(" has $");
         String p2CashHelp = player2Name.concat(" has $");
 
         String p1Cash = plCashHelp.concat(Integer.toString(Context.getInstance().currentGame().players[button%2].getCash()));
-        String p2Cash = p2CashHelp.concat(Integer.toString(Context.getInstance().currentGame().players[button+1%2].getCash()));
+        String p2Cash = p2CashHelp.concat(Integer.toString(Context.getInstance().currentGame().players[(button+1)%2].getCash()));
         StringProperty player1CashProperty = new SimpleStringProperty(p1Cash);
         StringProperty player2CashProperty = new SimpleStringProperty(p2Cash);
         StringProperty playerNameProp = new SimpleStringProperty(player1Name);
