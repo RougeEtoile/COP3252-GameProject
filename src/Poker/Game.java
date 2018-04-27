@@ -76,15 +76,12 @@ public class Game
     {
         if(!preFlop)
         {
-            System.out.println("button is " + button);
-            System.out.println("button%2 is " + button%2);
-            System.out.println("button+1%2 is " + ((button+1)%2));
+
             setAllRespondedFalse();
             currentBet = rules.getSmallBet();
             players[button%2].gamble(rules.getSmallBlind());
             players[(button+1)%2].gamble(rules.getBigBlind());
             pot += rules.getSmallBlind() + rules.getBigBlind();
-            System.out.println("dealing " + button);
             deck.deal();//burn a card
             players[(button+1)%2].addCards(deck.deal());
             players[button%2].addCards(deck.deal());

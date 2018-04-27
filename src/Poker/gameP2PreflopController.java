@@ -101,7 +101,7 @@ public class gameP2PreflopController implements Initializable{
         Context.getInstance().currentGame().pot += Context.getInstance().currentGame().players[(button+1)%2].getCash();
         Context.getInstance().currentGame().players[(button+1)%2].allIn();
         Context.getInstance().currentGame().players[(button+1)%2].setRespondedTrue();
-        if(Context.getInstance().currentGame().hasAllResponded())
+        if(Context.getInstance().currentGame().players[0].getStatus().equals("ALLIN")  && Context.getInstance().currentGame().players[1].getStatus().equals("ALLIN"))
         {
             Parent gameParent = FXMLLoader.load(getClass().getResource("gameScore.fxml"));
             Scene gameScene = new Scene(gameParent);
@@ -130,6 +130,7 @@ public class gameP2PreflopController implements Initializable{
             if (!Context.getInstance().currentGame().players[(button+1)%2].gamble(current))
             {
                 errorMSG.setText("You do not have the funds for that");
+                return;
             }
 
             else
@@ -187,50 +188,24 @@ public class gameP2PreflopController implements Initializable{
     {
         int button = Context.getInstance().currentGame().button;
         int current =Context.getInstance().currentGame().currentBet;
-        if(Context.getInstance().currentGame().bettingEnabled() && !Context.getInstance().currentGame().hasAllResponded())
+        int raise = Integer.parseInt(raiseAmount.getText());
+        System.out.println(current + raise);
+
+        if (!Context.getInstance().currentGame().players[(button+1)%2].gamble(current + raise))
         {
-            if (!Context.getInstance().currentGame().players[(button+1)%2].getStatus().equals("FOLD") || !Context.getInstance().currentGame().players[(button+1)%2].getStatus().equals("ALLIN"))
-            {
-                int raise = Integer.parseInt(raiseAmount.getText());
-                System.out.println(current + raise);
-
-                if (!Context.getInstance().currentGame().players[(button+1)%2].gamble(current + raise))
-                {
-                    errorMSG.setText("You can not raise by that amount");
-                    System.out.println("Raise failed");
-                }
-
-                else
-                {
-                    Context.getInstance().currentGame().pot += current + raise;
-                    Context.getInstance().currentGame().currentBet += raise;
-                    Context.getInstance().currentGame().setAllRespondedFalse();
-                    Context.getInstance().currentGame().players[(button+1)%2].setRespondedTrue();
-                }
-            }
-            if (!Context.getInstance().currentGame().hasAllResponded())
-            {
-                if(Context.getInstance().currentGame().bettingEnabled() && Context.getInstance().currentGame().players[(button+1)%2].isResponded())
-                {
-                    Parent gameParent = FXMLLoader.load(getClass().getResource("gameP1Preflop.fxml"));
-                    Scene gameScene = new Scene(gameParent);
-                    Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
-                    window.setScene(gameScene);
-                    window.show();
-                }
-            }
-            else
-            {
-                if(Context.getInstance().currentGame().bettingEnabled())
-                {
-                    Context.getInstance().currentGame().currentBet = Context.getInstance().currentGame().rules.getSmallBet();
-                    Parent gameParent = FXMLLoader.load(getClass().getResource("gameP2Flop.fxml"));
-                    Scene gameScene = new Scene(gameParent);
-                    Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
-                    window.setScene(gameScene);
-                    window.show();
-                }
-            }
+            errorMSG.setText("You do not have the funds for that");
+        }
+        else
+        {
+            Context.getInstance().currentGame().pot += current + raise;
+            Context.getInstance().currentGame().currentBet += raise;
+            Context.getInstance().currentGame().setAllRespondedFalse();
+            Context.getInstance().currentGame().players[(button+1)%2].setRespondedTrue();
+            Parent gameParent = FXMLLoader.load(getClass().getResource("gameP1Preflop.fxml"));
+            Scene gameScene = new Scene(gameParent);
+            Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
+            window.setScene(gameScene);
+            window.show();
         }
     }
 

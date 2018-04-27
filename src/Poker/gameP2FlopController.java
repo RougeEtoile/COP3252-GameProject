@@ -101,7 +101,7 @@ public class gameP2FlopController implements Initializable{
         Context.getInstance().currentGame().pot += Context.getInstance().currentGame().players[(button+1)%2].getCash();
         Context.getInstance().currentGame().players[(button+1)%2].allIn();
         Context.getInstance().currentGame().players[(button+1)%2].setRespondedTrue();
-        if(Context.getInstance().currentGame().hasAllResponded())
+        if(Context.getInstance().currentGame().players[0].getStatus().equals("ALLIN")  && Context.getInstance().currentGame().players[1].getStatus().equals("ALLIN"))
         {
             Parent gameParent = FXMLLoader.load(getClass().getResource("gameScore.fxml"));
             Scene gameScene = new Scene(gameParent);
@@ -127,6 +127,7 @@ public class gameP2FlopController implements Initializable{
             if (!Context.getInstance().currentGame().players[(button+1)%2].gamble(current))
             {
                 errorMSG.setText("You do not have the funds for that");
+                return;
             }
 
             else
@@ -185,45 +186,24 @@ public class gameP2FlopController implements Initializable{
     {
         int button = Context.getInstance().currentGame().button;
         int current =Context.getInstance().currentGame().currentBet;
-        if(Context.getInstance().currentGame().bettingEnabled() && !Context.getInstance().currentGame().hasAllResponded())
-        {
-            if (!Context.getInstance().currentGame().players[(button+1)%2].getStatus().equals("FOLD") || !Context.getInstance().currentGame().players[(button+1)%2].getStatus().equals("ALLIN"))
-            {
-                int raise = Integer.parseInt(raiseAmount.getText());
-                System.out.println(current + raise);
+        int raise = Integer.parseInt(raiseAmount.getText());
+        System.out.println(current + raise);
 
-                if (!Context.getInstance().currentGame().players[(button+1)%2].gamble(current + raise))
-                    errorMSG.setText("You do not have the funds for that");
-                else
-                {
-                    Context.getInstance().currentGame().pot += current + raise;
-                    Context.getInstance().currentGame().currentBet += raise;
-                    Context.getInstance().currentGame().setAllRespondedFalse();
-                    Context.getInstance().currentGame().players[(button+1)%2].setRespondedTrue();
-                }
-            }
-            if (!Context.getInstance().currentGame().hasAllResponded())
-            {
-                if(Context.getInstance().currentGame().bettingEnabled())
-                {
-                    Parent gameParent = FXMLLoader.load(getClass().getResource("gameP2Flop.fxml"));
-                    Scene gameScene = new Scene(gameParent);
-                    Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
-                    window.setScene(gameScene);
-                    window.show();
-                }
-            }
-            else
-            {
-                if(Context.getInstance().currentGame().bettingEnabled())
-                {
-                    Parent gameParent = FXMLLoader.load(getClass().getResource("gameP2Turn.fxml"));
-                    Scene gameScene = new Scene(gameParent);
-                    Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
-                    window.setScene(gameScene);
-                    window.show();
-                }
-            }
+        if (!Context.getInstance().currentGame().players[(button+1)%2].gamble(current + raise))
+        {
+            errorMSG.setText("You do not have the funds for that");
+        }
+        else
+        {
+            Context.getInstance().currentGame().pot += current + raise;
+            Context.getInstance().currentGame().currentBet += raise;
+            Context.getInstance().currentGame().setAllRespondedFalse();
+            Context.getInstance().currentGame().players[(button+1)%2].setRespondedTrue();
+            Parent gameParent = FXMLLoader.load(getClass().getResource("gameP1Flop.fxml"));
+            Scene gameScene = new Scene(gameParent);
+            Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
+            window.setScene(gameScene);
+            window.show();
         }
     }
 
