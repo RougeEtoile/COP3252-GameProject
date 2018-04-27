@@ -66,4 +66,15 @@ public class Card
     {
         return rank;
     }
+    
+    //Setters
+    public void setSuit(int s)
+    {
+        suit = s;
+    }
+    
+    public void setRank(int r)
+    {
+        rank = r;
+    }
 }

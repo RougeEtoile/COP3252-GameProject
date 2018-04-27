@@ -46,5 +46,9 @@ public class DeckofCards
         }
     }
 
+    public Vector<Card> getCards()
+    {
+        return cards;
+    }
 
 }
