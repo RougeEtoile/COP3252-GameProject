@@ -127,12 +127,12 @@ public class gameScoreController implements Initializable{
 
 
         Card [] p1hand = {Context.getInstance().currentGame().players[button%2].cards.elementAt(0), Context.getInstance().currentGame().players[button%2].cards.elementAt(1), Context.getInstance().currentGame().board.elementAt(0), Context.getInstance().currentGame().board.elementAt(1), Context.getInstance().currentGame().board.elementAt(2)};
-        Card [] p2hand = {Context.getInstance().currentGame().players[button+1%2].cards.elementAt(0), Context.getInstance().currentGame().players[button+1%2].cards.elementAt(1), Context.getInstance().currentGame().board.elementAt(0), Context.getInstance().currentGame().board.elementAt(1), Context.getInstance().currentGame().board.elementAt(2)};
+        Card [] p2hand = {Context.getInstance().currentGame().players[(button+1)%2].cards.elementAt(0), Context.getInstance().currentGame().players[(button+1)%2].cards.elementAt(1), Context.getInstance().currentGame().board.elementAt(0), Context.getInstance().currentGame().board.elementAt(1), Context.getInstance().currentGame().board.elementAt(2)};
 
         int p1score = Context.getInstance().currentGame().rules.score(p1hand);
         int p2score = Context.getInstance().currentGame().rules.score(p2hand);
 
-        if(Context.getInstance().currentGame().players[button+1%2].getStatus().equals("FOLD"))   //player 2 folded
+        if(Context.getInstance().currentGame().players[(button+1)%2].getStatus().equals("FOLD"))   //player 2 folded
         {
             round.textProperty().bind(new SimpleStringProperty(Context.getInstance().currentGame().players[button%2].getName() +" has won the hand"));
             Context.getInstance().currentGame().players[button%2].addWinnings(Context.getInstance().currentGame().pot);
@@ -145,19 +145,19 @@ public class gameScoreController implements Initializable{
         }
         else if( Context.getInstance().currentGame().players[button%2].getStatus().equals("FOLD"))
         {
-            round.textProperty().bind(new SimpleStringProperty(Context.getInstance().currentGame().players[button+1%2].getName() +" has won the hand"));
-            Context.getInstance().currentGame().players[button+1%2].addWinnings(Context.getInstance().currentGame().pot);
+            round.textProperty().bind(new SimpleStringProperty(Context.getInstance().currentGame().players[(button+1)%2].getName() +" has won the hand"));
+            Context.getInstance().currentGame().players[(button+1)%2].addWinnings(Context.getInstance().currentGame().pot);
         }
         else if(p2score > p1score)
         {
-            round.textProperty().bind(new SimpleStringProperty(Context.getInstance().currentGame().players[button+1%2].getName() +" has won the hand"));
-            Context.getInstance().currentGame().players[button+1%2].addWinnings(Context.getInstance().currentGame().pot);
+            round.textProperty().bind(new SimpleStringProperty(Context.getInstance().currentGame().players[(button+1)%2].getName() +" has won the hand"));
+            Context.getInstance().currentGame().players[(button+1)%2].addWinnings(Context.getInstance().currentGame().pot);
         }
         else
         {
             round.textProperty().bind(new SimpleStringProperty("The hand was a tie"));
             Context.getInstance().currentGame().players[button%2].addWinnings(Context.getInstance().currentGame().pot/2);
-            Context.getInstance().currentGame().players[button+1%2].addWinnings(Context.getInstance().currentGame().pot/2);
+            Context.getInstance().currentGame().players[(button+1)%2].addWinnings(Context.getInstance().currentGame().pot/2);
 
         }
 
@@ -185,8 +185,8 @@ public class gameScoreController implements Initializable{
         Image p1card2 = new Image(getClass().getResourceAsStream(player1card2));
         hand0.setImage(p1card1);
         hand1.setImage(p1card2);
-        String player2card1 = Context.getInstance().currentGame().players[button+1%2].cards.elementAt(0).toString();
-        String player2card2 = Context.getInstance().currentGame().players[button+1%2].cards.elementAt(1).toString();
+        String player2card1 = Context.getInstance().currentGame().players[(button+1)%2].cards.elementAt(0).toString();
+        String player2card2 = Context.getInstance().currentGame().players[(button+1)%2].cards.elementAt(1).toString();
         Image p2card1 = new Image(getClass().getResourceAsStream(player2card1));
         Image p2card2 = new Image(getClass().getResourceAsStream(player2card2));
         hand2.setImage(p2card1);
@@ -197,12 +197,12 @@ public class gameScoreController implements Initializable{
         //String cb = Integer.toString(Context.getInstance().currentGame().)
         String playerNameHelp ="Current player is ";
         String player1Name = Context.getInstance().currentGame().players[button%2].getName();
-        String player2Name = Context.getInstance().currentGame().players[button+1 %2].getName();
+        String player2Name = Context.getInstance().currentGame().players[(button+1)%2].getName();
         String plCashHelp = player1Name.concat(" has $");
         String p2CashHelp = player2Name.concat(" has $");
 
         String p1Cash = plCashHelp.concat(Integer.toString(Context.getInstance().currentGame().players[button%2].getCash()));
-        String p2Cash = p2CashHelp.concat(Integer.toString(Context.getInstance().currentGame().players[button+1 %2].getCash()));
+        String p2Cash = p2CashHelp.concat(Integer.toString(Context.getInstance().currentGame().players[(button+1)%2].getCash()));
         StringProperty player1CashProperty = new SimpleStringProperty(p1Cash);
         StringProperty player2CashProperty = new SimpleStringProperty(p2Cash);
         StringProperty playerNameProp = new SimpleStringProperty(player2Name);

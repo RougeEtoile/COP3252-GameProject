@@ -97,10 +97,10 @@ public class gameP2PreflopController implements Initializable{
         {
             Context.getInstance().currentGame().currentBet =0;
         }
-        Context.getInstance().currentGame().currentBet += Context.getInstance().currentGame().players[button+1%2].getCash();
-        Context.getInstance().currentGame().pot += Context.getInstance().currentGame().players[button+1%2].getCash();
-        Context.getInstance().currentGame().players[button+1%2].allIn();
-        Context.getInstance().currentGame().players[button+1%2].setRespondedTrue();
+        Context.getInstance().currentGame().currentBet += Context.getInstance().currentGame().players[(button+1)%2].getCash();
+        Context.getInstance().currentGame().pot += Context.getInstance().currentGame().players[(button+1)%2].getCash();
+        Context.getInstance().currentGame().players[(button+1)%2].allIn();
+        Context.getInstance().currentGame().players[(button+1)%2].setRespondedTrue();
         if(Context.getInstance().currentGame().hasAllResponded())
         {
             Parent gameParent = FXMLLoader.load(getClass().getResource("gameScore.fxml"));
@@ -127,7 +127,7 @@ public class gameP2PreflopController implements Initializable{
         if(!Context.getInstance().currentGame().hasAllResponded())
         {
             System.out.println(current);
-            if (!Context.getInstance().currentGame().players[button+1 %2].gamble(current))
+            if (!Context.getInstance().currentGame().players[(button+1)%2].gamble(current))
             {
                 errorMSG.setText("You do not have the funds for that");
             }
@@ -135,7 +135,7 @@ public class gameP2PreflopController implements Initializable{
             else
             {
                 Context.getInstance().currentGame().pot += current;
-                Context.getInstance().currentGame().players[button+1 %2].setRespondedTrue();
+                Context.getInstance().currentGame().players[(button+1)%2].setRespondedTrue();
                 if(!Context.getInstance().currentGame().bettingEnabled())
                 {
                     Parent gameParent = FXMLLoader.load(getClass().getResource("gameScore.fxml"));
@@ -173,8 +173,8 @@ public class gameP2PreflopController implements Initializable{
     void fold(MouseEvent event) throws IOException
     {
         int button = Context.getInstance().currentGame().button;
-        Context.getInstance().currentGame().players[button+1%2].fold();
-        Context.getInstance().currentGame().players[button+1%2].setRespondedTrue();
+        Context.getInstance().currentGame().players[(button+1)%2].fold();
+        Context.getInstance().currentGame().players[(button+1)%2].setRespondedTrue();
         Parent gameParent = FXMLLoader.load(getClass().getResource("gameScore.fxml"));
         Scene gameScene = new Scene(gameParent);
         Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
@@ -189,12 +189,12 @@ public class gameP2PreflopController implements Initializable{
         int current =Context.getInstance().currentGame().currentBet;
         if(Context.getInstance().currentGame().bettingEnabled() && !Context.getInstance().currentGame().hasAllResponded())
         {
-            if (!Context.getInstance().currentGame().players[button+1%2].getStatus().equals("FOLD") || !Context.getInstance().currentGame().players[button+1%2].getStatus().equals("ALLIN"))
+            if (!Context.getInstance().currentGame().players[(button+1)%2].getStatus().equals("FOLD") || !Context.getInstance().currentGame().players[(button+1)%2].getStatus().equals("ALLIN"))
             {
                 int raise = Integer.parseInt(raiseAmount.getText());
                 System.out.println(current + raise);
 
-                if (!Context.getInstance().currentGame().players[button+1%2].gamble(current + raise))
+                if (!Context.getInstance().currentGame().players[(button+1)%2].gamble(current + raise))
                 {
                     errorMSG.setText("You can not raise by that amount");
                     System.out.println("Raise failed");
@@ -205,12 +205,12 @@ public class gameP2PreflopController implements Initializable{
                     Context.getInstance().currentGame().pot += current + raise;
                     Context.getInstance().currentGame().currentBet += raise;
                     Context.getInstance().currentGame().setAllRespondedFalse();
-                    Context.getInstance().currentGame().players[button+1%2].setRespondedTrue();
+                    Context.getInstance().currentGame().players[(button+1)%2].setRespondedTrue();
                 }
             }
             if (!Context.getInstance().currentGame().hasAllResponded())
             {
-                if(Context.getInstance().currentGame().bettingEnabled() && Context.getInstance().currentGame().players[button+1%2].isResponded())
+                if(Context.getInstance().currentGame().bettingEnabled() && Context.getInstance().currentGame().players[(button+1)%2].isResponded())
                 {
                     Parent gameParent = FXMLLoader.load(getClass().getResource("gameP1Preflop.fxml"));
                     Scene gameScene = new Scene(gameParent);
@@ -252,8 +252,8 @@ public class gameP2PreflopController implements Initializable{
         show = !show;
         if(show)
         {
-            String player1card1 = Context.getInstance().currentGame().players[button+1 %2].cards.elementAt(0).toString();
-            String player1card2 = Context.getInstance().currentGame().players[button+1 %2].cards.elementAt(1).toString();
+            String player1card1 = Context.getInstance().currentGame().players[(button+1)%2].cards.elementAt(0).toString();
+            String player1card2 = Context.getInstance().currentGame().players[(button+1)%2].cards.elementAt(1).toString();
             Image card1 = new Image(getClass().getResourceAsStream(player1card1));
             Image card2 = new Image(getClass().getResourceAsStream(player1card2));
             hand0.setImage(card1);
@@ -275,12 +275,12 @@ public class gameP2PreflopController implements Initializable{
         String cb = Integer.toString(Context.getInstance().currentGame().currentBet);
         String playerNameHelp ="Current player is ";
         String player1Name = Context.getInstance().currentGame().players[button%2].getName();
-        String player2Name = Context.getInstance().currentGame().players[button+1 %2].getName();
+        String player2Name = Context.getInstance().currentGame().players[(button+1)%2].getName();
         String plCashHelp = player1Name.concat(" has $");
         String p2CashHelp = player2Name.concat(" has $");
 
         String p1Cash = plCashHelp.concat(Integer.toString(Context.getInstance().currentGame().players[button%2].getCash()));
-        String p2Cash = p2CashHelp.concat(Integer.toString(Context.getInstance().currentGame().players[button+1 %2].getCash()));
+        String p2Cash = p2CashHelp.concat(Integer.toString(Context.getInstance().currentGame().players[(button+1)%2].getCash()));
         StringProperty player1CashProperty = new SimpleStringProperty(p1Cash);
         StringProperty player2CashProperty = new SimpleStringProperty(p2Cash);
         StringProperty playerNameProp = new SimpleStringProperty(player2Name);
